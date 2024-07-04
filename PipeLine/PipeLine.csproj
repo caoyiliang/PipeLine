@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<LangVersion>default</LangVersion>
+		<Version>1.0.0</Version>
+		<Description>流水线控制</Description>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackageId>CSoft.PipeLine</PackageId>
+		<Authors>CSoft</Authors>
+		<Company>CSoft</Company>
+		<PackageProjectUrl>https://github.com/caoyiliang/PipeLine</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/caoyiliang/PipeLine</RepositoryUrl>
+		<PackageIcon>logo.png</PackageIcon>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <None Include="..\logo.png">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="CSoft.Utils" Version="8.0.8" />
+	</ItemGroup>
+
+</Project>
