@@ -5,8 +5,9 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<LangVersion>default</LangVersion>
-		<Version>1.0.0</Version>
+		<Version>1.0.1</Version>
 		<Description>流水线控制</Description>
+		<PackageReleaseNotes>优化添加样品，可暂停</PackageReleaseNotes>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageId>CSoft.PipeLine</PackageId>
 		<Authors>CSoft</Authors>
@@ -24,7 +25,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="CSoft.Utils" Version="8.0.8" />
+	  <PackageReference Include="CSoft.Utils" Version="8.0.8" />
 	</ItemGroup>
 
 </Project>

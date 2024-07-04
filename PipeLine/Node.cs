@@ -1,5 +1,4 @@
-﻿using System.Xml.Linq;
-using Utils;
+﻿using Utils;
 
 namespace PipeLine
 {
@@ -11,6 +10,7 @@ namespace PipeLine
 
         private readonly List<Worker> _workers;
         private readonly PushQueue<Sample> _samplesQueue;
+        private bool _isActive = false;
         public Node(string name, List<Worker> workers)
         {
             Name = name;
@@ -26,24 +26,17 @@ namespace PipeLine
             _samplesQueue.OnPushData += _samplesQueue_OnPushData;
         }
 
-        public async Task StartAsync()
-        {
-            await _samplesQueue.StartAsync();
-        }
-
         private async Task _samplesQueue_OnPushData(Sample sample)
         {
-            Console.WriteLine($"节点{Name}:样品[{sample.Name}] 等工人");
             var worker = _workers.FirstOrDefault(_ => _.IsBusy == false);
 
             while (worker == null)
             {
                 await Task.Delay(100);
-                worker = _workers.FirstOrDefault(_ => _.IsBusy == false);
+                if (_isActive) worker = _workers.FirstOrDefault(_ => _.IsBusy == false);
             }
             worker.IsBusy = true;
             _ = Task.Run(async () => await worker.DoWorkAsync(sample));
-            Console.WriteLine($"节点{Name}:样品[{sample.Name}] 分到工人");
         }
 
         private async Task Work_WorkCompleted(Worker worker, Sample sample)
@@ -52,9 +45,18 @@ namespace PipeLine
             if (WorkCompleted != null) await WorkCompleted.Invoke(sample);
         }
 
-        public void AddSample(Sample sample)
+        public void AddSample(Sample sample) => _samplesQueue.PutInData(sample);
+
+        public async Task StartAsync()
         {
-            _samplesQueue.PutInData(sample);
+            _isActive = true;
+            await _samplesQueue.StartAsync();
+        }
+
+        public async Task StopAsync()
+        {
+            _isActive = false;
+            await Task.CompletedTask;
         }
     }
 }

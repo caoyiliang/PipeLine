@@ -30,5 +30,11 @@ for (int i = 0; i < 10; i++)
 }
 
 await pipeline.StartAsync();
+await Task.Delay(11000);
+await pipeline.StopAsync();
+Console.WriteLine("取消");
+await Task.Delay(20000);
+await pipeline.StartAsync();
+Console.WriteLine("再开始");
 
 Console.ReadLine();
