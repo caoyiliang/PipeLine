@@ -19,8 +19,8 @@
             finally
             {
                 _semaphore.Release();
-                if (WorkCompleted != null) await WorkCompleted.Invoke(this, sample);
             }
+            if (WorkCompleted != null) await WorkCompleted.Invoke(this, sample);
         }
 
         protected abstract Task ProcessActionAsync(Sample sample);

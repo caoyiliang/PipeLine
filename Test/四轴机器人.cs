@@ -8,8 +8,8 @@ namespace Test
         protected override async Task ProcessActionAsync(Sample sample)
         {
             Console.WriteLine($"{Name}:{sample.Name} 开始干活");
-            await Task.Delay(10000);
+            await Task.Delay(5000);
             Console.WriteLine($"{Name}:{sample.Name} 结束干活");
-        }
+    }
     }
 }

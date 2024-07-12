@@ -5,9 +5,9 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<LangVersion>default</LangVersion>
-		<Version>1.0.1</Version>
+		<Version>1.0.2</Version>
 		<Description>流水线控制</Description>
-		<PackageReleaseNotes>优化添加样品，可暂停</PackageReleaseNotes>
+		<PackageReleaseNotes>Worker失败时不再触发完成</PackageReleaseNotes>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageId>CSoft.PipeLine</PackageId>
 		<Authors>CSoft</Authors>
