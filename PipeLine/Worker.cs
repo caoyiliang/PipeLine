@@ -9,20 +9,21 @@
 
         private readonly SemaphoreSlim _semaphore = new(1, 1);
 
-        public async Task DoWorkAsync(Sample sample)
+        public async Task DoWorkAsync(Sample sample, object? parameters)
         {
             await _semaphore.WaitAsync();
+            object? result = null;
             try
             {
-                await ProcessActionAsync(sample);
+                result = await ProcessActionAsync(sample, parameters);
             }
             finally
             {
                 _semaphore.Release();
             }
-            if (WorkCompleted != null) await WorkCompleted.Invoke(this, sample);
+            if (WorkCompleted != null) await WorkCompleted.Invoke(this, sample, result);
         }
 
-        protected abstract Task ProcessActionAsync(Sample sample);
+        protected abstract Task<object?> ProcessActionAsync(Sample sample, object? parameters);
     }
 }

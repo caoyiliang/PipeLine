@@ -14,25 +14,25 @@
                 if (i + 1 < _nodes.Count)
                 {
                     var nextNode = _nodes[i + 1];
-                    _nodes[i].WorkCompleted += async s =>
+                    _nodes[i].WorkCompleted += async (s, r) =>
                     {
-                        nextNode.AddSample(s);
+                        nextNode.AddSample(s, r);
                         await Task.CompletedTask;
                     };
                 }
                 else
                 {
-                    _nodes[i].WorkCompleted += async s =>
+                    _nodes[i].WorkCompleted += async (s, r) =>
                     {
-                        if (WorkCompleted != null) await WorkCompleted.Invoke(s);
+                        if (WorkCompleted != null) await WorkCompleted.Invoke(s, r);
                     };
                 }
             }
         }
 
-        public void AddSample(Sample sample)
+        public void AddSample(Sample sample, object? parameters)
         {
-            _nodes[0].AddSample(sample);
+            _nodes[0].AddSample(sample, parameters);
         }
 
         public async Task StartAsync()

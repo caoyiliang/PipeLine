@@ -18,7 +18,7 @@ Pipeline pipeline = new(
     ])
 ]);
 
-pipeline.WorkCompleted += async s =>
+pipeline.WorkCompleted += async (s, r) =>
 {
     Console.WriteLine($"Pipeline 样品: {s.Name} 已完成");
     await Task.CompletedTask;
@@ -26,7 +26,7 @@ pipeline.WorkCompleted += async s =>
 
 for (int i = 0; i < 10; i++)
 {
-    pipeline.AddSample(new Sample($"Sample{i}"));
+    pipeline.AddSample(new Sample($"Sample{i}"), null);
 }
 
 await pipeline.StartAsync();

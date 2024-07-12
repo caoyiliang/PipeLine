@@ -9,7 +9,7 @@ namespace PipeLine
         public event WorkCompletedEventHandler? WorkCompleted;
 
         private readonly List<Worker> _workers;
-        private readonly PushQueue<Sample> _samplesQueue;
+        private readonly PushQueue<(Sample sample, object? parameters)> _samplesQueue;
         private bool _isActive = false;
         public Node(string name, List<Worker> workers)
         {
@@ -26,7 +26,7 @@ namespace PipeLine
             _samplesQueue.OnPushData += _samplesQueue_OnPushData;
         }
 
-        private async Task _samplesQueue_OnPushData(Sample sample)
+        private async Task _samplesQueue_OnPushData((Sample sample, object? parameters) task)
         {
             var worker = _workers.FirstOrDefault(_ => _.IsBusy == false);
 
@@ -36,16 +36,16 @@ namespace PipeLine
                 if (_isActive) worker = _workers.FirstOrDefault(_ => _.IsBusy == false);
             }
             worker.IsBusy = true;
-            _ = Task.Run(async () => await worker.DoWorkAsync(sample));
+            _ = Task.Run(async () => await worker.DoWorkAsync(task.sample, task.parameters));
         }
 
-        private async Task Work_WorkCompleted(Worker worker, Sample sample)
+        private async Task Work_WorkCompleted(Worker worker, Sample sample, object? result)
         {
             worker.IsBusy = false;
-            if (WorkCompleted != null) await WorkCompleted.Invoke(sample);
+            if (WorkCompleted != null) await WorkCompleted.Invoke(sample, result);
         }
 
-        public void AddSample(Sample sample) => _samplesQueue.PutInData(sample);
+        public void AddSample(Sample sample, object? parameters) => _samplesQueue.PutInData((sample, parameters));
 
         public async Task StartAsync()
         {
