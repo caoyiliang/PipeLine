@@ -51,6 +51,14 @@
             }
         }
 
+        public async Task StopWorkAsync()
+        {
+            foreach (var node in _nodes)
+            {
+                await node.StopWorkAsync();
+            }
+        }
+
         public async Task StopAsync()
         {
             foreach (var node in _nodes)

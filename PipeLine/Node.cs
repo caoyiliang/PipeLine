@@ -11,6 +11,8 @@ namespace PipeLine
         private readonly List<Worker> _workers;
         private PushQueue<(Sample sample, object? parameters)> _samplesQueue;
         private bool _isActive = false;
+        private CancellationTokenSource cancellationToken = new();
+        private Task? _workTask;
         public Node(string name, List<Worker> workers)
         {
             Name = name;
@@ -42,7 +44,13 @@ namespace PipeLine
                 if (_isActive) worker = _workers.FirstOrDefault(_ => _.IsBusy == false);
             }
             worker.IsBusy = true;
-            _ = Task.Run(async () => await worker.DoWorkAsync(task.sample, task.parameters));
+            try
+            {
+                _workTask = Task.Run(async () => await worker.DoWorkAsync(task.sample, task.parameters, cancellationToken), cancellationToken.Token);
+            }
+            catch
+            {
+            }
         }
 
         private async Task Work_WorkCompleted(Worker worker, Sample sample, object? result)
@@ -55,7 +63,12 @@ namespace PipeLine
 
         public async Task StartAsync()
         {
+            foreach (var worker in _workers)
+            {
+                worker.IsBusy = false;
+            }
             _isActive = true;
+            cancellationToken = new();
             await _samplesQueue.StartAsync();
         }
 
@@ -72,6 +85,12 @@ namespace PipeLine
         {
             _isActive = false;
             await Task.CompletedTask;
+        }
+
+        internal async Task StopWorkAsync()
+        {
+            cancellationToken.Cancel();
+            if (_workTask != null) await _workTask;
         }
     }
 }

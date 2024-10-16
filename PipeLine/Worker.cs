@@ -9,13 +9,13 @@
 
         private readonly SemaphoreSlim _semaphore = new(1, 1);
 
-        public async Task DoWorkAsync(Sample sample, object? parameters)
+        public async Task DoWorkAsync(Sample sample, object? parameters, CancellationTokenSource cancellationToken)
         {
             await _semaphore.WaitAsync();
             object? result = null;
             try
             {
-                result = await ProcessActionAsync(sample, parameters);
+                result = await ProcessActionAsync(sample, parameters, cancellationToken);
             }
             finally
             {
@@ -24,6 +24,6 @@
             if (WorkCompleted != null) await WorkCompleted.Invoke(this, sample, result);
         }
 
-        protected abstract Task<object?> ProcessActionAsync(Sample sample, object? parameters);
+        protected abstract Task<object?> ProcessActionAsync(Sample sample, object? parameters, CancellationTokenSource cancellationToken);
     }
 }
