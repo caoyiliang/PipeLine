@@ -43,6 +43,14 @@
             }
         }
 
+        public void ClearTasks()
+        {
+            foreach (var node in _nodes)
+            {
+                node.ClearTasks();
+            }
+        }
+
         public async Task StopAsync()
         {
             foreach (var node in _nodes)

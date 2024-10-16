@@ -9,7 +9,7 @@ namespace PipeLine
         public event WorkCompletedEventHandler? WorkCompleted;
 
         private readonly List<Worker> _workers;
-        private readonly PushQueue<(Sample sample, object? parameters)> _samplesQueue;
+        private PushQueue<(Sample sample, object? parameters)> _samplesQueue;
         private bool _isActive = false;
         public Node(string name, List<Worker> workers)
         {
@@ -19,14 +19,20 @@ namespace PipeLine
             {
                 worker.WorkCompleted += Work_WorkCompleted;
             }
-            _samplesQueue = new()
+            _samplesQueue = InitQueue();
+        }
+
+        private PushQueue<(Sample sample, object? parameters)> InitQueue()
+        {
+            var samplesQueue = new PushQueue<(Sample sample, object? parameters)>()
             {
                 MaxCacheCount = int.MaxValue
             };
-            _samplesQueue.OnPushData += _samplesQueue_OnPushData;
+            samplesQueue.OnPushData += SamplesQueue_OnPushData;
+            return samplesQueue;
         }
 
-        private async Task _samplesQueue_OnPushData((Sample sample, object? parameters) task)
+        private async Task SamplesQueue_OnPushData((Sample sample, object? parameters) task)
         {
             var worker = _workers.FirstOrDefault(_ => _.IsBusy == false);
 
@@ -51,6 +57,15 @@ namespace PipeLine
         {
             _isActive = true;
             await _samplesQueue.StartAsync();
+        }
+
+        public void ClearTasks()
+        {
+#if NET6_0_OR_GREATER
+                _samplesQueue.Clear();
+#else
+            _samplesQueue = InitQueue();
+#endif
         }
 
         public async Task StopAsync()
