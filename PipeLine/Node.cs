@@ -74,11 +74,7 @@ namespace PipeLine
 
         public void ClearTasks()
         {
-#if NET6_0_OR_GREATER
-                _samplesQueue.Clear();
-#else
-            _samplesQueue = InitQueue();
-#endif
+            _samplesQueue.Clear();
         }
 
         public async Task StopAsync()
