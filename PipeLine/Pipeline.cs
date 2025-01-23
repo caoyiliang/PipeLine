@@ -16,8 +16,7 @@
                     var nextNode = _nodes[i + 1];
                     _nodes[i].WorkCompleted += async (s, r) =>
                     {
-                        nextNode.AddSample(s, r);
-                        await Task.CompletedTask;
+                        await nextNode.AddSampleAsync(s, r);
                     };
                 }
                 else
@@ -30,9 +29,9 @@
             }
         }
 
-        public void AddSample(Sample sample, object? parameters)
+        public async Task AddSampleAsync(Sample sample, object? parameters)
         {
-            _nodes[0].AddSample(sample, parameters);
+            await _nodes[0].AddSampleAsync(sample, parameters);
         }
 
         public async Task StartAsync()

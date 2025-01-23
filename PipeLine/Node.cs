@@ -59,7 +59,7 @@ namespace PipeLine
             if (WorkCompleted != null) await WorkCompleted.Invoke(sample, result);
         }
 
-        public void AddSample(Sample sample, object? parameters) => _samplesQueue.PutInData((sample, parameters));
+        public async Task AddSampleAsync(Sample sample, object? parameters) => await _samplesQueue.PutInDataAsync((sample, parameters));
 
         public async Task StartAsync()
         {

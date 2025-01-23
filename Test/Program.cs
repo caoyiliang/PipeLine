@@ -26,7 +26,7 @@ pipeline.WorkCompleted += async (s, r) =>
 
 for (int i = 0; i < 10; i++)
 {
-    pipeline.AddSample(new Sample($"Sample{i}"), null);
+    await pipeline.AddSampleAsync(new Sample($"Sample{i}"), null);
 }
 
 await pipeline.StartAsync();
